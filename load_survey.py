@@ -5,7 +5,7 @@ import numpy as np
 import os
 
 
-with open('survey.pickle', 'rb') as file:
+with open('model_survey.pickle', 'rb') as file:
     loaded_data = pickle.load(file)
 
 # Prediksi penyakit berdasarkan gejala yang diberikan pengguna
@@ -313,7 +313,7 @@ for i in range(1):
     break
 
   #Penyakit PMK
-  a=input("apakah59")#KG04
+  a=input("Apakah sapi anda mengeluarkan air liur yang berlebihan?")#KG04
   if a == "y":
     gejala_pengguna[58]=1
     a=input("Apakah sapi mengalami demam? ")

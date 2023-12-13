@@ -3,8 +3,6 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import load_model
 import numpy as np
 import os
-#import kelas_lebih_dari_threshold
-#import hasil prediksi
 from load_survey import kelas_lebih_dari_threshold, hasil_prediksi
 pengobatan = {
   "BEF" : "Pengobatan dilakukan simtomatik dan pencegahan terhadap infeksi sekunder dengan antibiotik yang dilakukan oleh petugas yang berwenang.",
@@ -20,7 +18,7 @@ pengobatan = {
   "PMK" : "masih ksg"
 }
 
-
+urutan_kelas = ['BEF','Brucellosis','Cacingan','Diare','Hipocalcemi','Kembung','Masitis','PMK','Paratubercolosis','Pneumonia','Skabies/LSD']
 with open('survey.pickle', 'rb') as file:
   loaded_data = pickle.load(file)
 penyakit_gambar = ["Scabise/LSD", "Masitis", "Normal","PMK"]
@@ -49,20 +47,21 @@ for i in kelas_lebih_dari_threshold:
 
 
     model = load_model('cnn_penyakit.h5')  # Model CNN
-    image_path = 'data/penyakitsapi/sapi/test/masitis'  # Gambar user disini
+    image_path = 'data/penyakitsapi/sapi/test/pmk'  # Gambar user disini
 
     for filename in os.listdir(image_path):
       f = os.path.join(image_path, filename)
     # checking if it is a file
       if os.path.isfile(f):
         predicted_class = predict_with_model(model, f)
-        if penyakit_gambar[predicted_class[0]] in hasil_prediksi:
-          print("Berdasarkan data dan gambar sapi anda memiliki gejala tinggi terkena ", penyakit_gambar[predicted_class[0]])  #kalo prediksi gambar sesuai dengan penyakit dari survey
-          print("Cara pengobatan untuk penyakit " ,penyakit_gambar[predicted_class[0]], "adalah ", pengobatan[penyakit_gambar[predicted_class[0]]])
+        common_elements = urutan_kelas[i] in penyakit_gambar[predicted_class[0]]
+        if common_elements:
+          print(predicted_class)
+          print("Berdasarkan data dan gambar sapi anda memiliki gejala tinggi terkena ", loaded_data.classes_[i])  #kalo prediksi gambar sesuai dengan penyakit dari survey
+          print("Cara pengobatan untuk penyakit " ,loaded_data.classes_[i], "adalah ", pengobatan[loaded_data.classes_[i]])
         else:
-          for i in kelas_lebih_dari_threshold:
-            print("\nBerdasarkan data dan gambar sapi anda memiliki gejala terkena:", [loaded_data.classes_[i]]) #kalo prediksi gambar tidak sesuai dengan penyakit dari survey
-            print("Cara pengobatan untuk penyakit ", penyakit_gambar[predicted_class[i]], "adalah ", pengobatan[penyakit_gambar[predicted_class[i]]])
+          print("Berdasarkan data dan gambar sapi anda memiliki gejala terkena:", [loaded_data.classes_[i]]) #kalo prediksi gambar tidak sesuai dengan penyakit dari survey
+          print("Cara pengobatan untuk penyakit ", loaded_data.classes_[i], "adalah ", pengobatan[loaded_data.classes_[i]])
   else:
     print("\nBerdasarkan data dan gambar sapi anda memiliki gejala terkena:", [loaded_data.classes_[i]])
     print("Cara pengobatan untuk penyakit ",loaded_data.classes_[i], "adalah ",pengobatan[loaded_data.classes_[i]])
