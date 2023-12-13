@@ -402,62 +402,9 @@ if n >2:
 
   # Ambil indeks kelas yang memiliki nilai probabilitas > threshold
   kelas_lebih_dari_threshold = [i for i, prob in enumerate(probabilitas_prediksi[0]) if prob > threshold]
-  # Cetak kelas yang memenuhi kondisi probabilitas > threshold
-  #print("probabilitas dari kelas: ", probabilitas_prediksi)
-  penyakit_gambar = ["Scabise/LSD", "Masitis", "Normal","PMK"]
-  for i in kelas_lebih_dari_threshold:
-    print("\nSapi anda memiliki gejala ", [loaded_data.classes_[i]])
-    if loaded_data.classes_[i] in penyakit_gambar:
-      def preprocess_image(file_path):
-        img = image.load_img(file_path, target_size=(150, 150))  # Set your desired image size
-        img_array = image.img_to_array(img)
-        img_array = np.expand_dims(img_array, axis=0)
-        return img_array
-
-      def normalize_image(img_array):
-        # Normalize pixel values to the range [0, 1]
-        normalized_img = img_array / 255.0
-        return normalized_img
-
-
-      def predict_with_model(model, image_path):
-        processed_image = preprocess_image(image_path)
-        normalized_image = normalize_image(processed_image)
-        predictions = model.predict(normalized_image)
-        predicted_class = np.argmax(predictions, axis=1)
-        return predicted_class
-
-
-      model = load_model('cnn_penyakit.h5')  # Model CNN
-      image_path = 'data/penyakitsapi/sapi/test/masitis'  # Gambar user disini
-
-      for filename in os.listdir(image_path):
-        f = os.path.join(image_path, filename)
-      # checking if it is a file
-        if os.path.isfile(f):
-          predicted_class = predict_with_model(model, f)
-          if penyakit_gambar[predicted_class[0]] in hasil_prediksi:
-            print("Berdasarkan data dan gambar sapi anda memiliki gejala tinggi terkena ", penyakit_gambar[predicted_class[0]])  #kalo prediksi gambar sesuai dengan penyakit dari survey
-            print("Cara pengobatan untuk penyakit " ,penyakit_gambar[predicted_class[0]], "adalah ", pengobatan[penyakit_gambar[predicted_class[0]]])
-          else:
-            for i in kelas_lebih_dari_threshold:
-              print("\nBerdasarkan data dan gambar sapi anda memiliki gejala terkena:", [loaded_data.classes_[i]]) #kalo prediksi gambar tidak sesuai dengan penyakit dari survey
-              print("Cara pengobatan untuk penyakit ", penyakit_gambar[predicted_class[i]], "adalah ", pengobatan[penyakit_gambar[predicted_class[i]]])
-    else:
-      for i in kelas_lebih_dari_threshold:
-        print("\nBerdasarkan data dan gambar sapi anda memiliki gejala terkena:", [loaded_data.classes_[i]])
-        print("Cara pengobatan untuk penyakit ",loaded_data.classes_[i], "adalah ",pengobatan[loaded_data.classes_[i]])
 else:
-  print("\nMaaf gejala tidak menunjukkan adanya penyakit pada sapi anda") #kalo gejala kurang dari 2
-
-
-
-
-
-
-
-
-
+  kelas_lebih_dari_threshold = []
+  print("\nMaaf gejala tidak menunjukkan adanya penyakit pada sapi anda")  # kalo gejala kurang dari 2
 
 
 
